@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
               try {
                 await writer.write(encoder.encode(chunk));
               } catch (error) {
-                console.log("Error writing chunk:", error);
+                sseHandleError("Error writing chunk:", error);
                 sseManager.removeClient(userId);
               }
             },
@@ -46,7 +46,7 @@ export async function GET(req: NextRequest) {
               try {
                 await writer.close();
               } catch (error) {
-                console.log("Error closing writer:", error);
+                sseHandleError("Error closing writer:", error);
               }
               sseManager.removeClient(userId);
             },
@@ -54,7 +54,7 @@ export async function GET(req: NextRequest) {
         } catch (error) {
           sseHandleError("Error in setImmediate block:", error);
         }
-      })().catch((error) => console.log("Error", error));
+      })().catch((error) => sseHandleError("Error", error));
     });
     return response;
   } catch (error) {
